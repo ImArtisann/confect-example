@@ -13,13 +13,12 @@ Args extends ReadonlyArray<unknown>,
     onSuccess: string | ((a: A, ...args: Args) => string)
     onFailure?: string | ((error: E, ...args: Args) => string | undefined)
 }
-
 export const withToast =
     <A, E extends { readonly message: string }, Args extends ReadonlyArray<unknown>>(
         mutation: (...args: Args) => Promise<Either.Either<A, E>>,
         options: ToastOptions<A, E, Args>,
     ) =>
-        async (...args: Args): Promise<void> => {
+        async (...args: Args): Promise<Either.Either<A, E>> => {
             const toastId = toast.loading(
                 typeof options.onWaiting === 'string'
                     ? options.onWaiting
@@ -43,4 +42,5 @@ export const withToast =
                     )
                 },
             })
+            return result
         }

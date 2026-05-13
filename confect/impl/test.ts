@@ -12,7 +12,7 @@ const badDeleteNote = FunctionImpl.make(api, 'test', 'badDeleteNote', ({ type}) 
         }else {
             return yield* Effect.fail(new ForbiddenError({ message: 'Forbidden' }))
         }
-    }).pipe(Effect.orDie)
+    })
 )
 
 export const test = GroupImpl.make(api, 'test').pipe(

@@ -21,7 +21,7 @@ export default function NotesClient() {
     const [newTag, setNewTag] = useState("")
     const [showCreate, setShowCreate] = useState(false)
 
-    const { createNote, deleteNote, badDelete } = useNotes()
+    const { createNote, deleteNote, tryBad } = useNotes()
 
     const notes = QueryResult.match(notesQuery, {
         onLoading: () => null,
@@ -59,7 +59,7 @@ export default function NotesClient() {
                 <header className="bg-white border-b border-zinc-200 px-6 py-4 flex items-center justify-between">
                     <h1 className="text-lg font-semibold text-zinc-900">My Notes</h1>
                     <button
-                        onClick={async () => await badDelete()}
+                        onClick={async () => await tryBad({ type: 'found'})}
                         className="text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
                     >
                         Bad Delete
