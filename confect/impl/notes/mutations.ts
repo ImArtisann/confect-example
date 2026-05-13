@@ -13,7 +13,7 @@ const create = FunctionImpl.make(api, 'notes.mutations', 'create', ({ text, tag 
         const auth = yield* getAuth()
 
         if(!auth){
-            return yield* new UnauthorizedError({ message: 'Unauthorized' })
+            return yield* Effect.fail(new UnauthorizedError({ message: 'Unauthorized' }))
         }
 
         return yield* notes.createNote({ userId: auth.subject, text, tag }).pipe(Effect.as(null))
@@ -26,7 +26,7 @@ const deleteNote = FunctionImpl.make(api, 'notes.mutations', 'deleteNote', ({ no
         const auth = yield* getAuth()
 
         if(!auth){
-            return yield* new UnauthorizedError({ message: 'Unauthorized' })
+            return yield* Effect.fail(new UnauthorizedError({ message: 'Unauthorized' }))
         }
 
         return yield* notes.deleteNote({ noteId, userId: auth.subject }).pipe(Effect.as(null))
@@ -36,9 +36,9 @@ const deleteNote = FunctionImpl.make(api, 'notes.mutations', 'deleteNote', ({ no
 const badDeleteNote = FunctionImpl.make(api, 'notes.mutations', 'badDeleteNote', ({ type}) =>
     Effect.gen(function* () {
         if(type === 'found'){
-            return yield* new NotFoundError({ message: 'Note not found' })
+            return yield* Effect.fail(new NotFoundError({ message: 'Note not found' }))
         }else {
-            return yield* new ForbiddenError({ message: 'Forbidden' })
+            return yield* Effect.fail(new ForbiddenError({ message: 'Forbidden' }))
         }
     }).pipe(Effect.orDie)
 )

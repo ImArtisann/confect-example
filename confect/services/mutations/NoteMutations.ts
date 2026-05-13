@@ -25,7 +25,7 @@ export class NoteMutations extends Effect.Service<NoteMutations>()('services/mut
             const userTable = yield* users.getUser({ userId })
 
             if(!userTable){
-                return yield* new NotFoundError({ message: 'User not found '})
+                return yield* Effect.fail(new NotFoundError({ message: 'User not found '}))
             }
 
             return yield* writer.table('notes').insert({
@@ -48,7 +48,7 @@ export class NoteMutations extends Effect.Service<NoteMutations>()('services/mut
             const noteTable = yield* notes.getNote({noteId})
 
             if(noteTable.userId !== userId){
-                return yield* new ForbiddenError({ message: 'User is not authorized to delete this note' })
+                return yield* Effect.fail(new ForbiddenError({ message: 'User is not authorized to delete this note' }))
             }
 
             return yield* writer.table('notes').delete(noteId).pipe(

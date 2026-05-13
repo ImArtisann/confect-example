@@ -43,7 +43,7 @@ export class UserMutations extends Effect.Service<UserMutations>()('services/mut
 
             const userResult = yield* users.getUser({ userId })
             if(!userResult){
-                return yield* new NotFoundError({ message: 'User not found'})
+                return yield* Effect.fail(new NotFoundError({ message: 'User not found'}))
             }
 
             return yield* writer.table('users').patch(userResult._id, {
@@ -58,7 +58,7 @@ export class UserMutations extends Effect.Service<UserMutations>()('services/mut
 
             const userResult = yield* users.getUser({ userId })
             if(!userResult){
-                return yield* new NotFoundError({ message: 'User not found'})
+                return yield* Effect.fail(new NotFoundError({ message: 'User not found'}))
             }
 
             return yield* writer.table('users').delete(userResult._id)

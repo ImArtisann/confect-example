@@ -31,7 +31,7 @@ const users = FunctionImpl.make(api, 'notes.queries', 'users', () =>
         const auth = yield* getAuth()
 
         if(!auth){
-            return yield* new UnauthorizedError({ message: 'Unauthorized' })
+            return yield* Effect.fail(new UnauthorizedError({ message: 'Unauthorized' }))
         }
 
         return yield* notes.getUsers({userId: auth.subject}).pipe(
@@ -52,7 +52,7 @@ const searchUsers = FunctionImpl.make(api, 'notes.queries', 'searchUsers', ({ us
         const auth = yield* getAuth()
 
         if(!auth){
-            return yield* new UnauthorizedError({ message: 'Unauthorized' })
+            return yield* Effect.fail(new UnauthorizedError({ message: 'Unauthorized' }))
         }
 
         return yield* notes.getUsers({userId}).pipe(
