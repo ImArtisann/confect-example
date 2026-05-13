@@ -24,7 +24,7 @@ export const useNotes = () => {
         try {
             const result = await tryBad({type: 'found'})
             Either.match(result, {
-                onLeft: (error) => console.log('Console Log:' +error._tag, error),
+                onLeft: (error) => console.log('Console Log:' + error._tag, error),
                 onRight: () => console.log("deleted"),
             });
         }catch (e){

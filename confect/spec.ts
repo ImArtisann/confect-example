@@ -4,4 +4,4 @@ import {notes} from "./spec/notes";
 import {users} from "./spec/users";
 import {test} from "./spec/test";
 
-export default Spec.make().add(auth).add(notes).add(users).add(test)
+export default Spec.make().add(notes).add(users).add(test).add(auth)

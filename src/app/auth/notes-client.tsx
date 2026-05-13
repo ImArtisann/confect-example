@@ -8,6 +8,11 @@ import {useState} from "react";
 import {authClient} from "@/lib/auth-client";
 import {useNotes} from "@/hooks/use-notes";
 import {Id} from "@/convex/_generated/dataModel";
+import {
+    Authenticated,
+    AuthLoading,
+} from "convex/react";
+
 
 export default function NotesClient() {
     const router = useRouter()

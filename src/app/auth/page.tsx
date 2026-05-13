@@ -1,12 +1,21 @@
-import {isAuthenticated} from "@/lib/auth-server";
-import {redirect} from "next/navigation";
+'use client'
+
 import NotesClient from "@/app/auth/notes-client";
 
+import {
+    Authenticated,
+    AuthLoading,
+} from "convex/react";
 
-export default async function Page() {
-    if (!(await isAuthenticated())) {
-        redirect("/sign-in");
-    }
 
-    return <NotesClient />
+export default function Page() {
+
+    return <>
+        <AuthLoading>
+            <div className="min-h-screen flex items-center justify-center text-sm text-zinc-400">
+                Loading…
+            </div>)
+        </AuthLoading>
+        <Authenticated><NotesClient /></Authenticated>
+    </>
 }
