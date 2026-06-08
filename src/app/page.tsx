@@ -1,14 +1,11 @@
 'use client'
 
-import { QueryResult, useQuery } from "@confect/react"
-import refs from "@/confect-api/_generated/refs"
 import Link from "next/link"
-import {useNotes} from "@/hooks/use-notes";
+import {Result, useAtomValue} from "@effect-atom/atom-react";
+import {getNotesList} from "@/lib/atom-test";
 
 export default function Home() {
-    const notes = useQuery(refs.public.notes.queries.list, {})
-
-    const {  deleteNote } = useNotes()
+    const notes = useAtomValue(getNotesList)
 
     return (
         <div className="min-h-screen bg-zinc-50">
@@ -23,35 +20,36 @@ export default function Home() {
             </header>
 
             <main className="max-w-3xl mx-auto px-6 py-8">
-                {QueryResult.match(notes, {
-                    onLoading: () => (
+                {Result.match(notes, {
+                    onInitial: () => (
                         <div className="text-sm text-zinc-400 py-12 text-center">Loading…</div>
                     ),
-                    onSuccess: (notes) => notes.length === 0 ? (
+                    onSuccess: ({ value: notes }) => notes.length === 0 ? (
                         <div className="text-sm text-zinc-400 py-12 text-center">No notes yet.</div>
                     ) : (
                         <div className="bg-white rounded-xl border border-zinc-200 overflow-hidden">
                             <table className="w-full text-sm">
                                 <thead>
-                                    <tr className="border-b border-zinc-200 bg-zinc-50">
-                                        <th className="px-4 py-3 text-left font-medium text-zinc-500">Note</th>
-                                        <th className="px-4 py-3 text-left font-medium text-zinc-500">Tag</th>
-                                    </tr>
+                                <tr className="border-b border-zinc-200 bg-zinc-50">
+                                    <th className="px-4 py-3 text-left font-medium text-zinc-500">Note</th>
+                                    <th className="px-4 py-3 text-left font-medium text-zinc-500">Tag</th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    {notes.map((note, i) => (
-                                        <tr
-                                            key={note.noteId}
-                                            className={`border-b border-zinc-100 last:border-0 ${i % 2 === 0 ? "" : "bg-zinc-50/50"}`}
-                                        >
-                                            <td className="px-4 py-3 text-zinc-900">{note.text}</td>
-                                            <td className="px-4 py-3 text-zinc-500">{note.tag ?? "—"}</td>
-                                        </tr>
-                                    ))}
+                                {notes.map((note, i) => (
+                                    <tr
+                                        key={note.noteId}
+                                        className={`border-b border-zinc-100 last:border-0 ${i % 2 === 0 ? "" : "bg-zinc-50/50"}`}
+                                    >
+                                        <td className="px-4 py-3 text-zinc-900">{note.text}</td>
+                                        <td className="px-4 py-3 text-zinc-500">{note.tag ?? "—"}</td>
+                                    </tr>
+                                ))}
                                 </tbody>
                             </table>
                         </div>
                     ),
+                    onFailure: () => <div className="bg-white rounded-xl border border-zinc-200 overflow-hidden p-4 text-center">Failed to load notes</div>
                 })}
             </main>
         </div>

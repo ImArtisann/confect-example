@@ -2,30 +2,24 @@
 
 
 import {useRouter} from "next/navigation";
-import {QueryResult, useMutation, useQuery} from "@confect/react";
-import refs from "@/confect-api/_generated/refs";
 import {useState} from "react";
 import {authClient} from "@/lib/auth-client";
 import {useNotes} from "@/hooks/use-notes";
-import {Id} from "@/convex/_generated/dataModel";
-import {
-    Authenticated,
-    AuthLoading,
-} from "convex/react";
-
+import {Result, useAtomValue} from "@effect-atom/atom-react";
+import { getUserNotes} from "@/lib/atom-test";
 
 export default function NotesClient() {
     const router = useRouter()
-    const notesQuery = useQuery(refs.public.notes.queries.users, {})
+    const notesQuery = useAtomValue(getUserNotes)
     const [newText, setNewText] = useState("")
     const [newTag, setNewTag] = useState("")
     const [showCreate, setShowCreate] = useState(false)
 
-    const { createNote, deleteNote, tryBad } = useNotes()
+    const { createNote, deleteNote } = useNotes()
 
-    const notes = QueryResult.match(notesQuery, {
-        onLoading: () => null,
-        onSuccess: (allNotes) => allNotes,
+    const notes = Result.match(notesQuery, {
+        onInitial: () => null,
+        onSuccess: ({value: allNotes}) => allNotes,
         onFailure: () => {
             router.replace('/sign-in')
             return null
@@ -58,12 +52,6 @@ export default function NotesClient() {
             <div className="min-h-screen bg-zinc-50">
                 <header className="bg-white border-b border-zinc-200 px-6 py-4 flex items-center justify-between">
                     <h1 className="text-lg font-semibold text-zinc-900">My Notes</h1>
-                    <button
-                        onClick={async () => await tryBad({ type: 'found'})}
-                        className="text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
-                    >
-                        Bad Delete
-                    </button>
                     <button
                         onClick={handleSignOut}
                         className="text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
@@ -152,7 +140,7 @@ export default function NotesClient() {
                                         </td>
                                         <td className="px-4 py-3 text-right">
                                             <button
-                                                onClick={async () => await deleteNote({noteId: note.noteId})}
+                                                onClick={async () => await deleteNote(note.noteId)}
                                                 className="text-sm text-red-500 hover:text-red-700 disabled:opacity-40 transition-colors"
                                             >
                                                Delete
